@@ -24,10 +24,14 @@ def extract_next_links(url, resp):
    
     hyperlinkLst = [] #list of hyperlinks declaration
 
+    # page w/ url
+    
+    
     #test for page
     try:
         if resp.status == 200:
             #get response and go thru the content to get hyperlinks
+            
             pass
         elif resp.status != 200:
             print(resp.error)
@@ -44,9 +48,29 @@ def is_valid(url):
     # If you decide to crawl it, return True; otherwise return False.
     # There are already some conditions that return False.
     try:
+        #need to search thru only these domains
+        '''
+        *.ics.uci.edu/*
+        *.cs.uci.edu/*
+        *.informatics.uci.edu/*
+        *.stat.uci.edu/*
+        '''
+
         parsed = urlparse(url)
-        if parsed.scheme not in set(["http", "https"]):
+
+        #url = 'HTTP://www.Python.org/doc/#'
+        #returns 'http://www.Python.org/doc/
+
+        if parsed.scheme not in set(["http", "https"]): 
             return False
+        
+        #find if parse's domain is one of the above. 
+        #testing 
+        print("netlock: ", parsed.netloc)
+        if parsed.netloc in ["ics.uci.edu", "cs.uci.edu", "informatics.uci.edu", "stat.uci.edu"]:
+
+            return False
+
         return not re.match(
             r".*\.(css|js|bmp|gif|jpe?g|ico"
             + r"|png|tiff?|mid|mp2|mp3|mp4"
