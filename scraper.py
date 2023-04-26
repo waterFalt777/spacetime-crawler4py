@@ -29,29 +29,19 @@ def extract_next_links(url, resp):
     #         resp.raw_response.content: the content of the page!
     # Return a list with the hyperlinks (as strings) scrapped from resp.raw_response.content
    
-    hyperlinkLst = [] #list of hyperlinks declaration
-
-    # page w/ url
+    # Return empty list if error
+    if resp.error:
+        return []
     
-    
-    #test for page
-    try:
-        if resp.status == 200:
-            #get response and go thru the content to get hyperlinks
-            print("status is ok")
-            print(f"url {url}")
-            print(f"resp.url {resp.url}")
+    # If status is 200, try parsing webpage
+    if resp.status == 200:
+        # Return empty list if no data
+        if resp.raw_response is None:
+            return []
 
-        elif resp.status != 200:
-            print(resp.error)
-            raise statusError 
-
-    except statusError:
-        print("Status Error Raised")
-
-    #testing: i think i won't be able to check is_Valid bc currently list is empty,
-    #maybe ill get to see status ok and see the first ics url thats given
-    return hyperlinkLst #list()
+        soup = BeautifulSoup(resp.raw_response.content, "html.parser")
+        hyperLinkLst = [l.get("href") for l in soup.find_all('a')]
+        return hyperLinkLst
 
 def is_valid(url):
     # Decide whether to crawl this url or not. 
