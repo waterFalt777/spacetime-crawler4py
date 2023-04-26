@@ -1,8 +1,15 @@
 import re
 from urllib.parse import urlparse
 
+#ref 
+#ssh slam15@openlab.ics.uci.edu
+#to restart- python3 launch.py --restart
+#to run - python3 launch.py
+
+
+
 #class errors
-class statusError(exception):
+class statusError(Exception):
     '''Error for when status code is not 200 indication that there was an error with page retrieval.'''
     "Status is not ok. Error in retrieving page."
     pass
@@ -31,8 +38,10 @@ def extract_next_links(url, resp):
     try:
         if resp.status == 200:
             #get response and go thru the content to get hyperlinks
-            
-            pass
+            print("status is ok")
+            print(f"url {url}")
+            print(f"resp.url {resp.url}")
+
         elif resp.status != 200:
             print(resp.error)
             raise statusError 
@@ -40,15 +49,16 @@ def extract_next_links(url, resp):
     except statusError:
         print("Status Error Raised")
 
-
-    return hyperlinkLst#list()
+    #testing: i think i won't be able to check is_Valid bc currently list is empty,
+    #maybe ill get to see status ok and see the first ics url thats given
+    return hyperlinkLst #list()
 
 def is_valid(url):
     # Decide whether to crawl this url or not. 
     # If you decide to crawl it, return True; otherwise return False.
     # There are already some conditions that return False.
     try:
-        #need to search thru only these domains
+        #need to search thru only these domains, use regex
         '''
         *.ics.uci.edu/*
         *.cs.uci.edu/*
@@ -67,9 +77,16 @@ def is_valid(url):
         #find if parse's domain is one of the above. 
         #testing 
         print("netlock: ", parsed.netloc)
-        if parsed.netloc in ["ics.uci.edu", "cs.uci.edu", "informatics.uci.edu", "stat.uci.edu"]:
 
-            return False
+
+        #Testing: want to just test if we can match one page of ics and not a sub page
+         
+        if parsed.netloc == "ics.uci.edu" and parsed.path == "": #in ["ics.uci.edu", "cs.uci.edu", "informatics.uci.edu", "stat.uci.edu"]:
+            print("match")
+            return True
+        
+        
+         #return False
 
         return not re.match(
             r".*\.(css|js|bmp|gif|jpe?g|ico"
