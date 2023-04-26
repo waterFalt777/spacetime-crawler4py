@@ -1,5 +1,6 @@
 import re
 from urllib.parse import urlparse
+from bs4 import BeautifulSoup
 
 #ref 
 #ssh slam15@openlab.ics.uci.edu
